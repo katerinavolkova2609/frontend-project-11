@@ -4,19 +4,24 @@ import onChange from 'on-change';
 export default () => {
   const state = {
     isValid: true,
-    feed: '',
+    errors: [],
+    feeds: [],
   };
 
-  let schema = yup.object().shape({
-    website: yup.string().url(),
-  });
+  const doValidate = (links) => {
+    const schema = yup.string().url().notOneOf(links);
+    return schema;
+  };
 
   const form = document.querySelector('form');
-  const inputEl = document.querySelector('.url-input');
+  const inputEl = document.querySelector('#url-input');
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const inputValue = formData.get('url');
-  })
+    const answer = await doValidate(state.feeds).validate(inputValue);
+    console.log(answer);
+    // state.source.push(inputValue);
+  });
 };
