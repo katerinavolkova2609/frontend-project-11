@@ -20,8 +20,13 @@ export default () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const inputValue = formData.get('url');
-    const answer = await doValidate(state.feeds).validate(inputValue);
+    const answer = await doValidate(state.feeds).isValid(inputValue);
     console.log(answer);
-    // state.source.push(inputValue);
+    if (answer === false) {
+      inputEl.classList.add('is-invalid');
+    } else {
+      state.feeds.push(inputValue);
+    };
+    console.log(state.feeds);
   });
 };
