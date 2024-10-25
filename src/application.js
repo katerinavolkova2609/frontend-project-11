@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import onChange from 'on-change';
+import watch from './view';
 
 export default () => {
   const state = {
@@ -14,7 +15,7 @@ export default () => {
   };
 
   const form = document.querySelector('form');
-  const inputEl = document.querySelector('#url-input');
+  const watchedState = watch(state);
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -23,10 +24,10 @@ export default () => {
     const answer = await doValidate(state.feeds).isValid(inputValue);
     console.log(answer);
     if (answer === false) {
-      inputEl.classList.add('is-invalid');
+      watchedState.isValid = false;
     } else {
       state.feeds.push(inputValue);
-    };
+    }
     console.log(state.feeds);
   });
 };
