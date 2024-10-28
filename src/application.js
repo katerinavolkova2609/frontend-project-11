@@ -1,6 +1,8 @@
 import * as yup from 'yup';
 import onChange from 'on-change';
 import watch from './view';
+import i18next from 'i18next';
+import resources from './locales/index';
 
 export default () => {
   const state = {
@@ -8,6 +10,17 @@ export default () => {
     errors: [],
     feeds: [],
   };
+
+  i18next
+    .init({
+      lng: 'ru',
+      debug: true,
+      resources,
+    })
+    .then(function (t) {
+      // initialized and ready to go!
+    //   document.getElementById('output').innerHTML = i18next.t('key');
+    });
 
   const doValidate = (links) => {
     const schema = yup.string().url().notOneOf(links);
