@@ -10,8 +10,9 @@ export default () => {
     errors: [],
     feeds: [],
   };
+  const i18n = i18next.createInstance();
 
-  i18next
+  i18n
     .init({
       lng: 'ru',
       debug: true,
@@ -19,10 +20,19 @@ export default () => {
     })
     .then(function (t) {
       // initialized and ready to go!
-    //   document.getElementById('output').innerHTML = i18next.t('key');
+      //   document.getElementById('output').innerHTML = i18next.t('key');
     });
+  yup.setLocale({
+    mixed: {
+      notOneOf: i18n.t('errors.validation.uniqURL'),
+    },
+    string: {
+      url: i18n.t('errors.validation.invalidURL'),
 
-  const doValidate = (links) => {
+    },
+
+  });
+  const validateSchema = (links) => {
     const schema = yup.string().url().notOneOf(links);
     return schema;
   };
@@ -34,13 +44,20 @@ export default () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const inputValue = formData.get('url');
-    const answer = await doValidate(state.feeds).isValid(inputValue);
-    console.log(answer);
-    if (answer === false) {
-      watchedState.isValid = false;
-    } else {
+    await validateSchema(state.feeds)
+      .validate(inputValue)
+      .catch((e) => {
+        watchedState.isValid = false;
+        console.log(e.errors);
+      });
+    // console.log(answer);
+    // if (answer === false) {
+    //   watchedState.isValid = false;
+    // } else {
+    if (watchedState.isValid !== false) {
       state.feeds.push(inputValue);
     }
+    // }
     console.log(state.feeds);
   });
 };
