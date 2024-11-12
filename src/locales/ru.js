@@ -2,13 +2,17 @@
 export default {
     translation: {
       // BEGIN (write your solution here)
-      errors: {
+      error: {
         validation: {
           invalidURL : 'Ссылка должна быть валидным URL',
           uniqURL: 'RSS уже существует',
-          // shouldBeContainRSS: 'Ресурс не содержит валидный RSS',
+          hasToContainRSS: 'Ресурс не содержит валидный RSS',
+        },
+        networkError: {
+          disconnect: 'Ошибка сети',
         }
       },
+      successLoading: 'RSS успешно загружен',
       // END
     },
   };

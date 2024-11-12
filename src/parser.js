@@ -13,7 +13,7 @@ export default (stringContainingRSS) => {
   const mainTitle = rootEl.querySelector('title').textContent;
   const mainFeedDescription = rootEl.querySelector('description').textContent;
 
-  const items = Array.from(root.querySelectorAll('item'));
+  const items = Array.from(rootEl.querySelectorAll('item'));
   const posts = items.map((item) => {
     const title = item.querySelector('title').textContent;
     const description = item.querySelector('description').textContent;

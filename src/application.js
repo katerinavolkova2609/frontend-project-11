@@ -10,7 +10,7 @@ import { uniqId } from 'lodash';
 export default () => {
   const state = {
     isValid: true,
-    errors: [],
+    error: '',
     feeds: [],
   };
   const i18n = i18next.createInstance();
@@ -27,10 +27,10 @@ export default () => {
 
   yup.setLocale({
     mixed: {
-      notOneOf: i18n.t('errors.validation.uniqURL'),
+      notOneOf: i18n.t('error.validation.uniqURL'),
     },
     string: {
-      url: i18n.t('errors.validation.invalidURL'),
+      url: i18n.t('error.validation.invalidURL'),
     },
   });
 
@@ -59,17 +59,15 @@ export default () => {
     validateSchema(state.feeds)
       .validate(inputValue)
       .then(() => {
-        if (watchedState.isValid !== false) {
+        if (watchedState.error === '') {
           state.feeds.push(inputValue);
           console.log(state.feeds);
           getData(inputValue);
         }
       })
       .catch((e) => {
-        watchedState.isValid = false;
-        console.log(e.errors);
+        const [err] = e.errors;
+        watchedState.error = err;
       });
-    // if (watchedState.isValid !== false) {
-    // }
   });
 };
