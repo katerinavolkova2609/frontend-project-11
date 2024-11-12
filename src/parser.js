@@ -8,7 +8,6 @@ export default (stringContainingRSS) => {
   if (content.querySelector('parsererror')) {
     throw new Error('parse error');
   }
-
   const rootEl = content.querySelector('channel');
   const mainTitle = rootEl.querySelector('title').textContent;
   const mainFeedDescription = rootEl.querySelector('description').textContent;

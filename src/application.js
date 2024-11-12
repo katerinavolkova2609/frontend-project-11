@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import watch from './view';
 import i18next from 'i18next';
 import resources from './locales/index';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import parse from './parser';
 import { uniqId } from 'lodash';
 
@@ -20,10 +20,6 @@ export default () => {
     debug: true,
     resources,
   });
-  // .then(function (t) {
-  //   // initialized and ready to go!
-  //   //   document.getElementById('output').innerHTML = i18next.t('key');
-  // });
 
   yup.setLocale({
     mixed: {
@@ -59,11 +55,18 @@ export default () => {
     validateSchema(state.feeds)
       .validate(inputValue)
       .then(() => {
-        if (watchedState.error === '') {
-          state.feeds.push(inputValue);
-          console.log(state.feeds);
-          getData(inputValue);
-        }
+        state.feeds.push(inputValue);
+        console.log(state.feeds);
+        getData(inputValue)
+          .then((smth) => {
+            console.log(smth);
+          })
+          .catch((e) => {
+            console.log(e.message);
+            if (e.message === 'parse error') {
+              watchedState.error = i18n.t('error.validation.notContainRSS');
+            } else watchedState.error = i18n.t('error.networkError');
+          });
       })
       .catch((e) => {
         const [err] = e.errors;

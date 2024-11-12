@@ -1,18 +1,14 @@
-
 export default {
-    translation: {
-      // BEGIN (write your solution here)
-      error: {
-        validation: {
-          invalidURL : 'Ссылка должна быть валидным URL',
-          uniqURL: 'RSS уже существует',
-          hasToContainRSS: 'Ресурс не содержит валидный RSS',
-        },
-        networkError: {
-          disconnect: 'Ошибка сети',
-        }
+  translation: {
+    interface: {},
+    error: {
+      validation: {
+        invalidURL: 'Ссылка должна быть валидным URL',
+        uniqURL: 'RSS уже существует',
+        notContainRSS: 'Ресурс не содержит валидный RSS',
       },
-      successLoading: 'RSS успешно загружен',
-      // END
+      networkError: 'Ошибка сети',
     },
-  };
+    successLoading: 'RSS успешно загружен',
+  },
+};
