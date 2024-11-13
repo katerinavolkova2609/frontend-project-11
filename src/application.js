@@ -9,9 +9,10 @@ import { uniqId } from 'lodash';
 
 export default () => {
   const state = {
-    isValid: true,
     error: '',
+    url: [],
     feeds: [],
+    posts:[],
   };
   const i18n = i18next.createInstance();
 
@@ -36,8 +37,7 @@ export default () => {
   const getData = (link) =>
     axios.get(makeProxyURL(link)).then((response) => {
       const parsedData = parse(response.data.contents);
-      console.log(response);
-      return response;
+      return parsedData;
     });
 
   const validateSchema = (links) => {
@@ -52,17 +52,19 @@ export default () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const inputValue = formData.get('url');
-    validateSchema(state.feeds)
+    validateSchema(state.url)
       .validate(inputValue)
       .then(() => {
-        state.feeds.push(inputValue);
-        console.log(state.feeds);
         getData(inputValue)
-          .then((smth) => {
-            console.log(smth);
+          .then((response) => {
+            const {feeds, posts} = response;
+            console.log(feeds);
+            console.log(posts);
+            state.url.push(inputValue);
+            state.feeds.push(feeds);
+            state.posts.push(posts);
           })
           .catch((e) => {
-            console.log(e.message);
             if (e.message === 'parse error') {
               watchedState.error = i18n.t('error.validation.notContainRSS');
             } else watchedState.error = i18n.t('error.networkError');
