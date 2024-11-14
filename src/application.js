@@ -12,7 +12,7 @@ export default () => {
     error: '',
     url: [],
     feeds: [],
-    posts:[],
+    posts: [],
   };
   const i18n = i18next.createInstance();
 
@@ -57,12 +57,13 @@ export default () => {
       .then(() => {
         getData(inputValue)
           .then((response) => {
-            const {feeds, posts} = response;
+            const { feeds, posts } = response;
             console.log(feeds);
             console.log(posts);
             state.url.push(inputValue);
             state.feeds.push(feeds);
-            state.posts.push(posts);
+            state.posts.push(posts);     
+            watchedState.feeds = feeds;
           })
           .catch((e) => {
             if (e.message === 'parse error') {
@@ -74,5 +75,6 @@ export default () => {
         const [err] = e.errors;
         watchedState.error = err;
       });
+
   });
 };
