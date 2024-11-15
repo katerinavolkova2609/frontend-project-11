@@ -16,10 +16,20 @@ const renderContainers = (element, text) => {
   titleEl.textContent = text;
 };
 
-const renderFeeds = () => {
+const renderFeeds = (element, titles, description) => {
   const list = document.createElement('ul');
   list.classList.add('list-group', 'border-0', 'rounded-0');
-  // list.innerHTML = ''
+  element.append(list);
+  const liEl = document.createElement('li');
+  const hEl = document.createElement('h3');
+  const pEl = document.createElement('p');
+  liEl.classList.add('list-group-item', 'border-0', 'border-end-0');
+  hEl.classList.add('h6', 'm-0');
+  pEl.classList.add('m-0', 'small', 'text-black-50');
+  list.append(liEl);
+  liEl.append(hEl, pEl);
+  hEl.textContent = titles;
+  pEl.textContent = description;
 };
 
 const renderPosts = () => {
@@ -31,7 +41,7 @@ export default (state) => {
     if (path === 'feeds') {
       renderContainers(feedsContainer, 'Фиды');
       renderContainers(postsContainer, 'Посты');
-      // renderFeeds();
+      renderFeeds(feedsContainer, value.title, value.description);
       // renderPosts();
     }
     if (path === 'error') {
