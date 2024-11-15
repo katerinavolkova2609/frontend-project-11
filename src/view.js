@@ -16,7 +16,7 @@ const renderContainers = (element, text) => {
   titleEl.textContent = text;
 };
 
-const renderFeeds = (element, titles, description) => {
+const renderFeeds = (element, title, description) => {
   const list = document.createElement('ul');
   list.classList.add('list-group', 'border-0', 'rounded-0');
   element.append(list);
@@ -28,11 +28,32 @@ const renderFeeds = (element, titles, description) => {
   pEl.classList.add('m-0', 'small', 'text-black-50');
   list.append(liEl);
   liEl.append(hEl, pEl);
-  hEl.textContent = titles;
+  hEl.textContent = title;
   pEl.textContent = description;
 };
 
-const renderPosts = () => {
+const renderPosts = (element, posts) => {
+  const list = document.createElement('ul');
+  list.classList.add('list-group', 'border-0', 'rounded-0');
+  element.append(list);
+  posts.forEach(({ title, description }) => {
+    console.log(title);
+    const liEl = document.createElement('li');
+    liEl.classList.add(
+      'list-group-item',
+      'd-flex',
+      'justify-content-between',
+      'align-items-start',
+      'border-0',
+      'border-end-0'
+    );
+    list.append(liEl);
+    const aEl = document.createElement('a');
+    const buttonEl = document.createElement('a');
+    liEl.append(aEl, buttonEl);
+    aEl.outerHTML = `<a href="http://example.com/test/1731683520" class="fw-bold" data-id="24" target="_blank" rel="noopener noreferrer">${title}</a>`;
+    buttonEl.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="24" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
+  });
 };
 
 export default (state) => {
@@ -42,7 +63,9 @@ export default (state) => {
       renderContainers(feedsContainer, 'Фиды');
       renderContainers(postsContainer, 'Посты');
       renderFeeds(feedsContainer, value.title, value.description);
-      // renderPosts();
+    }
+    if (path === 'posts') {
+      renderPosts(postsContainer, value);
     }
     if (path === 'error') {
       const inputEl = document.querySelector('#url-input');

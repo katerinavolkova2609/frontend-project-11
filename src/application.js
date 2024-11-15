@@ -64,6 +64,7 @@ export default () => {
             state.feeds.push(feeds);
             state.posts.push(posts);     
             watchedState.feeds = feeds;
+            watchedState.posts = posts;
           })
           .catch((e) => {
             if (e.message === 'parse error') {
