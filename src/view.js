@@ -1,41 +1,39 @@
 import onChange from 'on-change';
 
-const renderFeeds = () => {
-  const feedsContainer = document.querySelector('.feeds');
+const feedsContainer = document.querySelector('.feeds');
+const postsContainer = document.querySelector('.posts');
+
+const renderContainers = (element, text) => {
   const divEl = document.createElement('div');
   divEl.classList.add('card', 'border-0');
-  feedsContainer.append(divEl);
+  element.append(divEl);
   const divForTitle = document.createElement('div');
   divForTitle.classList.add('card-body');
   divEl.append(divForTitle);
   const titleEl = document.createElement('h2');
   titleEl.classList.add('card-title', 'h4');
   divForTitle.append(titleEl);
-  titleEl.textContent = 'Фиды';
+  titleEl.textContent = text;
+};
+
+const renderFeeds = () => {
+  const list = document.createElement('ul');
+  list.classList.add('list-group', 'border-0', 'rounded-0');
+  // list.innerHTML = ''
 };
 
 const renderPosts = () => {
-  const postsContainer = document.querySelector('.posts');
-  const divEl = document.createElement('div');
-  divEl.classList.add('card', 'border-0');
-  postsContainer.append(divEl);
-  const divForTitle = document.createElement('div');
-  divForTitle.classList.add('card-body');
-  divEl.append(divForTitle);
-  const titleEl = document.createElement('h2');
-  titleEl.classList.add('card-title', 'h4');
-  divForTitle.append(titleEl);
-  titleEl.textContent = 'Посты';
 };
 
 export default (state) => {
   const watchedState = onChange(state, (path, value, previousValue) => {
     console.log(path, value, previousValue);
     if (path === 'feeds') {
-      renderFeeds();
-      renderPosts();
+      renderContainers(feedsContainer, 'Фиды');
+      renderContainers(postsContainer, 'Посты');
+      // renderFeeds();
+      // renderPosts();
     }
-
     if (path === 'error') {
       const inputEl = document.querySelector('#url-input');
       inputEl.classList.add('is-invalid');
