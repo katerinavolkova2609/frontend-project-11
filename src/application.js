@@ -5,7 +5,7 @@ import i18next from 'i18next';
 import resources from './locales/index';
 import axios, { AxiosError } from 'axios';
 import parse from './parser';
-import { uniqId } from 'lodash';
+import { uniqueId } from 'lodash';
 
 export default () => {
   const state = {
@@ -58,24 +58,27 @@ export default () => {
         getData(inputValue)
           .then((response) => {
             const { feeds, posts } = response;
-            console.log(feeds);
-            console.log(posts);
             state.url.push(inputValue);
-            state.feeds.push(feeds);
-            state.posts.push(posts);     
-            watchedState.feeds = feeds;
-            watchedState.posts = posts;
+            posts.map((item) => {
+              item['id'] = uniqueId();
+            });
+            state.feeds.unshift(feeds);
+            state.posts.unshift(posts);
+            watchedState.feeds = [...state.feeds];
+            watchedState.posts = [...state.posts];
           })
           .catch((e) => {
             if (e.message === 'parse error') {
               watchedState.error = i18n.t('error.validation.notContainRSS');
-            } else watchedState.error = i18n.t('error.networkError');
+            }
+            if (e instanceof AxiosError) {
+              watchedState.error = i18n.t('error.networkError');
+            }
           });
       })
       .catch((e) => {
         const [err] = e.errors;
         watchedState.error = err;
       });
-
   });
 };

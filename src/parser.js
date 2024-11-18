@@ -4,7 +4,7 @@ export default (stringContainingRSS) => {
     stringContainingRSS,
     'application/xml'
   );
-  console.log(content);
+
   if (content.querySelector('parsererror')) {
     throw new Error('parse error');
   }
@@ -19,8 +19,6 @@ export default (stringContainingRSS) => {
     const description = item.querySelector('description').textContent;
     return { title, description };
   });
-  console.log(mainTitle, mainFeedDescription);
-  console.log(posts);
   return {
     feeds: { title: mainTitle, description: mainFeedDescription },
     posts: posts,
