@@ -58,10 +58,9 @@ const renderPosts = (element, posts) => {
     liEl.append(aEl, buttonEl);
     aEl.outerHTML = `<a href="http://example.com/test/1731683520" class="fw-bold" data-id="24" target="_blank" rel="noopener noreferrer">${title}</a>`;
     buttonEl.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="24" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
-    list.append(liEl)
+    list.append(liEl);
     return;
   });
-
 };
 
 export default (state) => {
@@ -69,16 +68,13 @@ export default (state) => {
     // console.log(path, value, previousValue);
     if (path === 'feeds') {
       feedsContainer.textContent = '';
-
       renderContainers(feedsContainer, 'Фиды');
       renderFeeds(feedsContainer, value);
     }
     if (path === 'posts') {
-      renderContainers.textContent = '';
+      postsContainer.textContent = '';
       renderContainers(postsContainer, 'Посты');
       value.map((i) => renderPosts(postsContainer, i));
-      ;
-      // console.log(value);
     }
     if (path === 'error') {
       const inputEl = document.querySelector('#url-input');
