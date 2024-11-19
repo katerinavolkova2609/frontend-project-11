@@ -46,7 +46,7 @@ export default () => {
   };
 
   const form = document.querySelector('form');
-  const watchedState = watch(state);
+  const watchedState = watch(state, i18n);
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();

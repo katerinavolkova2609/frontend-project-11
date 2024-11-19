@@ -1,3 +1,4 @@
+
 import onChange from 'on-change';
 
 const feedsContainer = document.querySelector('.feeds');
@@ -63,23 +64,28 @@ const renderPosts = (element, posts) => {
   });
 };
 
-export default (state) => {
+export default (state, i18n) => {
   const watchedState = onChange(state, (path, value, previousValue) => {
     // console.log(path, value, previousValue);
+    const inputEl = document.querySelector('#url-input');
+    const feedbackEl = document.querySelector('.feedback');
     if (path === 'feeds') {
       feedsContainer.textContent = '';
       renderContainers(feedsContainer, 'Фиды');
       renderFeeds(feedsContainer, value);
     }
     if (path === 'posts') {
+      inputEl.classList.remove('is-invalid');
+      feedbackEl.classList.remove('text-danger');
+      feedbackEl.classList.add('text-success');
+      feedbackEl.textContent = i18n.t('successLoading');
       postsContainer.textContent = '';
       renderContainers(postsContainer, 'Посты');
       value.map((i) => renderPosts(postsContainer, i));
     }
     if (path === 'error') {
-      const inputEl = document.querySelector('#url-input');
       inputEl.classList.add('is-invalid');
-      const feedbackEl = document.querySelector('.text-danger');
+      feedbackEl.classList.add('text-danger');
       feedbackEl.textContent = value;
     }
   });
