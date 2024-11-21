@@ -43,7 +43,7 @@ const renderPosts = (element, posts) => {
   element.append(list);
   // console.log(posts);
   const liElements = posts.map((post) => {
-    // console.log(post);
+    console.log(post);
     const { title } = post;
     // console.log(title);
     const liEl = document.createElement('li');

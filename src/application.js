@@ -57,21 +57,19 @@ export default async () => {
     }
   };
 
+  const getId = (posts) => posts.map((post) => ({...post, id: uniqueId()}));
+
   const updatePosts = (delay = 5000) => {
     setTimeout(() => {
       const promises = state.urls.map((url) =>
-        axios
-          .get(makeProxyURL(url))
+        getData(url)
           .then((response) => {
-            const newPosts = parse(response.data.contents).posts;
+            const newPosts = response.posts;
             const oldTitles = state.posts.flat().map((post) => post.title);
             const filteredPosts = newPosts.filter(
               ({ title }) => !oldTitles.includes(title)
             );
-            const newPostWithId = filteredPosts.map((post) => ({
-              ...post,
-              id: uniqueId(),
-            }));
+            const newPostWithId = getId(filteredPosts);
             state.posts.unshift(newPostWithId);
             watchedState.posts = [...state.posts];
           })
@@ -92,11 +90,9 @@ export default async () => {
           .then((response) => {
             const { feeds, posts } = response;
             state.urls.push(inputValue);
-            posts.map((item) => {
-              item['id'] = uniqueId();
-            });
+            const postsWithId = getId(posts);
             state.feeds.unshift(feeds);
-            state.posts.unshift(posts);
+            state.posts.unshift(postsWithId);
             watchedState.feeds = [...state.feeds];
             watchedState.posts = [...state.posts];
           })
