@@ -7,10 +7,10 @@ import axios, { AxiosError } from 'axios';
 import parse from './parser';
 import { uniqueId } from 'lodash';
 
-export default () => {
+export default async () => {
   const state = {
     error: '',
-    url: [],
+    urls: [],
     feeds: [],
     posts: [],
   };
@@ -48,17 +48,50 @@ export default () => {
   const form = document.querySelector('form');
   const watchedState = watch(state, i18n);
 
+  const errorHandler = (err) => {
+    if (err.message === 'parse error') {
+      watchedState.error = i18n.t('error.validation.notContainRSS');
+    }
+    if (err instanceof AxiosError) {
+      watchedState.error = i18n.t('error.networkError');
+    }
+  };
+
+  const updatePosts = (delay = 5000) => {
+    setTimeout(() => {
+      const promises = state.urls.map((url) =>
+        axios
+          .get(makeProxyURL(url))
+          .then((response) => {
+            const newPosts = parse(response.data.contents).posts;
+            const oldTitles = state.posts.flat().map((post) => post.title);
+            const filteredPosts = newPosts.filter(
+              ({ title }) => !oldTitles.includes(title)
+            );
+            const newPostWithId = filteredPosts.map((post) => ({
+              ...post,
+              id: uniqueId(),
+            }));
+            state.posts.unshift(newPostWithId);
+            watchedState.posts = [...state.posts];
+          })
+          .catch((err) => errorHandler(err))
+      );
+      Promise.all(promises).finally(() => updatePosts());
+    }, delay);
+  };
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const inputValue = formData.get('url');
-    validateSchema(state.url)
+    validateSchema(state.urls)
       .validate(inputValue)
       .then(() => {
         getData(inputValue)
           .then((response) => {
             const { feeds, posts } = response;
-            state.url.push(inputValue);
+            state.urls.push(inputValue);
             posts.map((item) => {
               item['id'] = uniqueId();
             });
@@ -67,18 +100,12 @@ export default () => {
             watchedState.feeds = [...state.feeds];
             watchedState.posts = [...state.posts];
           })
-          .catch((e) => {
-            if (e.message === 'parse error') {
-              watchedState.error = i18n.t('error.validation.notContainRSS');
-            }
-            if (e instanceof AxiosError) {
-              watchedState.error = i18n.t('error.networkError');
-            }
-          });
+          .catch((err) => errorHandler(err));
       })
       .catch((e) => {
         const [err] = e.errors;
         watchedState.error = err;
       });
   });
+  updatePosts();
 };

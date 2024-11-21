@@ -37,14 +37,15 @@ const renderFeeds = (element, feeds) => {
 };
 
 const renderPosts = (element, posts) => {
+  // console.log(posts);
   const list = document.createElement('ul');
   list.classList.add('list-group', 'border-0', 'rounded-0');
   element.append(list);
-  console.log(posts);
+  // console.log(posts);
   const liElements = posts.map((post) => {
-    console.log(post);
+    // console.log(post);
     const { title } = post;
-    console.log(title);
+    // console.log(title);
     const liEl = document.createElement('li');
     liEl.classList.add(
       'list-group-item',
@@ -65,8 +66,8 @@ const renderPosts = (element, posts) => {
 };
 
 export default (state, i18n) => {
-  const watchedState = onChange(state, (path, value, previousValue) => {
-    // console.log(path, value, previousValue);
+  const watchedState = onChange(state, (path, value) => {
+    // console.log(path, value);
     const inputEl = document.querySelector('#url-input');
     const feedbackEl = document.querySelector('.feedback');
     if (path === 'feeds') {
