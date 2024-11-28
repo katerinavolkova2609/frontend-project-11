@@ -13,6 +13,8 @@ export default async () => {
     urls: [],
     feeds: [],
     posts: [],
+    uiState: {
+    },
   };
   const i18n = i18next.createInstance();
 
@@ -46,6 +48,7 @@ export default async () => {
   };
 
   const form = document.querySelector('form');
+  const containerWithPosts = document.querySelector('.posts');
   const watchedState = watch(state, i18n);
 
   const errorHandler = (err) => {
@@ -57,7 +60,7 @@ export default async () => {
     }
   };
 
-  const getId = (posts) => posts.map((post) => ({...post, id: uniqueId()}));
+  const getId = (posts) => posts.map((post) => ({ ...post, id: uniqueId() }));
 
   const updatePosts = (delay = 5000) => {
     setTimeout(() => {
@@ -103,5 +106,19 @@ export default async () => {
         watchedState.error = err;
       });
   });
+
+  containerWithPosts.addEventListener('click', (e) => {
+    const closestEl = e.target.previousElementSibling;
+    const titleOfPost = closestEl.textContent;
+    console.log(titleOfPost);
+    const [currentPost] = state.posts
+      .flat()
+      .filter((post) => post.title === titleOfPost);
+    console.log(currentPost);
+    watchedState.uiState =  { currentPost, viewedPosts: [...currentPost.id] };
+
+    
+  });
+
   updatePosts();
 };

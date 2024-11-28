@@ -1,4 +1,3 @@
-
 import onChange from 'on-change';
 
 const feedsContainer = document.querySelector('.feeds');
@@ -42,9 +41,8 @@ const renderPosts = (element, posts) => {
   list.classList.add('list-group', 'border-0', 'rounded-0');
   element.append(list);
   // console.log(posts);
-  const liElements = posts.map((post) => {
-    console.log(post);
-    const { title } = post;
+  posts.map(({title, id}) => {
+    // console.log(post);
     // console.log(title);
     const liEl = document.createElement('li');
     liEl.classList.add(
@@ -56,13 +54,26 @@ const renderPosts = (element, posts) => {
       'border-end-0'
     );
     const aEl = document.createElement('a');
-    const buttonEl = document.createElement('a');
+    const buttonEl = document.createElement('button');
     liEl.append(aEl, buttonEl);
-    aEl.outerHTML = `<a href="http://example.com/test/1731683520" class="fw-bold" data-id="24" target="_blank" rel="noopener noreferrer">${title}</a>`;
-    buttonEl.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="24" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
+    aEl.outerHTML = `<a href="http://example.com/test/1731683520" class="fw-bold" data-id="${id}" target="_blank" rel="noopener noreferrer">${title}</a>`;
+    buttonEl.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="${id}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
     list.append(liEl);
     return;
   });
+};
+
+const renderModal = (uiState) => {
+  const modalTitle = document.querySelector('.modal-title');
+  const modalBody = document.querySelector('.modal-body');
+  modalTitle.textContent = uiState.currentPost.title;
+  modalBody.textContent = uiState.currentPost.description;
+  const readPosts = uiState.viewedPosts;
+  readPosts.forEach((id) => {
+    const readPost = document.querySelector(`[data-id="${id}"]`);
+    readPost.classList.remove('fw-bold');
+    readPost.classList.add('fw-normal');
+  })
 };
 
 export default (state, i18n) => {
@@ -83,6 +94,9 @@ export default (state, i18n) => {
       postsContainer.textContent = '';
       renderContainers(postsContainer, 'Посты');
       value.map((i) => renderPosts(postsContainer, i));
+    }
+    if (path === 'uiState') {
+      renderModal(value);
     }
     if (path === 'error') {
       inputEl.classList.add('is-invalid');
