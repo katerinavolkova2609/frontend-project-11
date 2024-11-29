@@ -13,8 +13,8 @@ export default async () => {
     urls: [],
     feeds: [],
     posts: [],
-    uiState: {
-    },
+    currentPost: '',
+    viewedPosts: [],
   };
   const i18n = i18next.createInstance();
 
@@ -74,6 +74,7 @@ export default async () => {
             );
             const newPostWithId = getId(filteredPosts);
             state.posts.unshift(newPostWithId);
+            console.log(newPostWithId);
             watchedState.posts = [...state.posts];
           })
           .catch((err) => errorHandler(err))
@@ -110,14 +111,12 @@ export default async () => {
   containerWithPosts.addEventListener('click', (e) => {
     const closestEl = e.target.previousElementSibling;
     const titleOfPost = closestEl.textContent;
-    console.log(titleOfPost);
     const [currentPost] = state.posts
       .flat()
       .filter((post) => post.title === titleOfPost);
-    console.log(currentPost);
-    watchedState.uiState =  { currentPost, viewedPosts: [...currentPost.id] };
-
-    
+    watchedState.currentPost = currentPost;
+    state.viewedPosts.push(currentPost.id);
+    watchedState.viewedPosts = [...state.viewedPosts];
   });
 
   updatePosts();
