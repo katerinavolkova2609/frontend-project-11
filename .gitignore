@@ -2,3 +2,10 @@ node_modules/
 .eslintrc.json
 *.log
 dist
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+playwright.config.js
+/tests-examples/
+/tests/
