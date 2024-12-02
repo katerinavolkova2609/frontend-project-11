@@ -77,6 +77,7 @@ export default (state, i18n) => {
   const watchedState = onChange(state, (path, value) => {
     const inputEl = document.querySelector('#url-input');
     const feedbackEl = document.querySelector('.feedback');
+    const form = document.querySelector('form');
 
     switch (path) {
       case 'error':
@@ -90,6 +91,8 @@ export default (state, i18n) => {
         renderFeeds(feedsContainer, value);
         break;
       case 'posts':
+        form.reset();
+        inputEl.focus();
         inputEl.classList.remove('is-invalid');
         feedbackEl.classList.remove('text-danger');
         feedbackEl.classList.add('text-success');
