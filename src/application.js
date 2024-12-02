@@ -1,11 +1,10 @@
+import axios, { AxiosError } from 'axios';
 import * as yup from 'yup';
-// import onChange from 'on-change';
-import watch from './view';
+import { uniqueId } from 'lodash';
 import i18next from 'i18next';
 import resources from './locales/index';
-import axios, { AxiosError } from 'axios';
+import watch from './view';
 import parse from './parser';
-import { uniqueId } from 'lodash';
 
 export default async () => {
   const state = {
@@ -33,14 +32,10 @@ export default async () => {
     },
   });
 
-  const makeProxyURL = (link) =>
-    `https://allorigins.hexlet.app/get?disableCache=true&url=${link}`;
+  const makeProxyURL = (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${link}`;
 
-  const getData = (link) =>
-    axios.get(makeProxyURL(link)).then((response) => {
-      const parsedData = parse(response.data.contents);
-      return parsedData;
-    });
+  const getData = (link) => axios.get(makeProxyURL(link))
+    .then((response) => parse(response.data.contents));
 
   const validateSchema = (links) => {
     const schema = yup.string().url().notOneOf(links);
@@ -64,21 +59,17 @@ export default async () => {
 
   const updatePosts = (delay = 5000) => {
     setTimeout(() => {
-      const promises = state.urls.map((url) =>
-        getData(url)
-          .then((response) => {
-            const newPosts = response.posts;
-            const oldTitles = state.posts.flat().map((post) => post.title);
-            const filteredPosts = newPosts.filter(
-              ({ title }) => !oldTitles.includes(title)
-            );
-            const newPostWithId = getId(filteredPosts);
-            state.posts.unshift(newPostWithId);
-            console.log(newPostWithId);
-            watchedState.posts = [...state.posts];
-          })
-          .catch((err) => errorHandler(err))
-      );
+      const promises = state.urls.map((url) => getData(url).then((response) => {
+        const newPosts = response.posts;
+        const oldTitles = state.posts.flat().map((post) => post.title);
+        const filteredPosts = newPosts.filter(
+          ({ title }) => !oldTitles.includes(title),
+        );
+        const newPostWithId = getId(filteredPosts);
+        state.posts.unshift(newPostWithId);
+        watchedState.posts = [...state.posts];
+      })
+        .catch((err) => errorHandler(err)));
       Promise.all(promises).finally(() => updatePosts());
     }, delay);
   };
@@ -102,8 +93,8 @@ export default async () => {
           })
           .catch((err) => errorHandler(err));
       })
-      .catch((e) => {
-        const [err] = e.errors;
+      .catch((error) => {
+        const [err] = error.errors;
         watchedState.error = err;
       });
   });

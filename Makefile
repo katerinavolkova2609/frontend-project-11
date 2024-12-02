@@ -3,7 +3,7 @@ develop:
 install:
 	npm ci
 test:
-	npm test
+	npx playwright test
 lint:
 	npx eslint .
 build:

@@ -2,7 +2,7 @@ export default (stringContainingRSS) => {
   const parser = new DOMParser();
   const content = parser.parseFromString(
     stringContainingRSS,
-    'application/xml'
+    'application/xml',
   );
 
   if (content.querySelector('parsererror')) {
@@ -21,6 +21,6 @@ export default (stringContainingRSS) => {
   });
   return {
     feeds: { title: mainTitle, description: mainFeedDescription },
-    posts: posts,
+    posts,
   };
 };

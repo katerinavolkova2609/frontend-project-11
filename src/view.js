@@ -31,7 +31,7 @@ const renderFeeds = (element, feeds) => {
     pEl.textContent = description;
     liEl.append(hEl, pEl);
     list.append(liEl);
-    return;
+    return liEl;
   });
 };
 const renderReadPosts = (idOfReadPosts) => {
@@ -42,7 +42,6 @@ const renderReadPosts = (idOfReadPosts) => {
   });
 };
 const renderPosts = (element, posts, idOfReadPosts) => {
-  console.log(idOfReadPosts);
   const list = document.createElement('ul');
   list.classList.add('list-group', 'border-0', 'rounded-0');
   element.append(list);
@@ -54,7 +53,7 @@ const renderPosts = (element, posts, idOfReadPosts) => {
       'justify-content-between',
       'align-items-start',
       'border-0',
-      'border-end-0'
+      'border-end-0',
     );
     const aEl = document.createElement('a');
     const buttonEl = document.createElement('button');
@@ -63,7 +62,7 @@ const renderPosts = (element, posts, idOfReadPosts) => {
     aEl.outerHTML = `<a href="http://example.com/test/1731683520" class="${typeOfClass}" data-id="${id}" target="_blank" rel="noopener noreferrer">${title}</a>`;
     buttonEl.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="${id}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
     list.append(liEl);
-    return;
+    return liEl;
   });
 };
 
