@@ -9,5 +9,5 @@ dist
 playwright.config.js
 /tests-examples/
 /tests/
-/.vscode
-.babelrc
+.vscode/
+
