@@ -2,9 +2,9 @@ import axios, { AxiosError } from 'axios';
 import * as yup from 'yup';
 import { uniqueId } from 'lodash';
 import i18next from 'i18next';
-import resources from './locales/index';
-import watch from './view';
-import parse from './parser';
+import resources from './locales/index.js';
+import watch from './view.js';
+import parse from './parser.js';
 
 export default async () => {
   const state = {
