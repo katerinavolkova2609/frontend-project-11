@@ -41,7 +41,7 @@ const renderReadPosts = (idOfReadPosts) => {
     readPost.classList.add('fw-normal');
   });
 };
-const renderPosts = (element, posts, idOfReadPosts) => {
+const renderPosts = (element, posts, idOfReadPosts, text) => {
   const list = document.createElement('ul');
   list.classList.add('list-group', 'border-0', 'rounded-0');
   element.append(list);
@@ -60,7 +60,7 @@ const renderPosts = (element, posts, idOfReadPosts) => {
     liEl.append(aEl, buttonEl);
     const typeOfClass = idOfReadPosts.includes(id) ? 'fw-normal' : 'fw-bold';
     aEl.outerHTML = `<a href="http://example.com/test/1731683520" class="${typeOfClass}" data-id="${id}" target="_blank" rel="noopener noreferrer">${title}</a>`;
-    buttonEl.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="${id}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
+    buttonEl.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="${id}" data-bs-toggle="modal" data-bs-target="#modal">${text}</button>`;
     list.append(liEl);
     return liEl;
   });
@@ -75,33 +75,37 @@ const renderModal = (currentPost) => {
 
 export default (state, i18n) => {
   const watchedState = onChange(state, (path, value) => {
-    // console.log(path, value);
     const inputEl = document.querySelector('#url-input');
     const feedbackEl = document.querySelector('.feedback');
-    if (path === 'feeds') {
-      feedsContainer.textContent = '';
-      renderContainers(feedsContainer, 'Фиды');
-      renderFeeds(feedsContainer, value);
-    }
-    if (path === 'posts') {
-      inputEl.classList.remove('is-invalid');
-      feedbackEl.classList.remove('text-danger');
-      feedbackEl.classList.add('text-success');
-      feedbackEl.textContent = i18n.t('successLoading');
-      postsContainer.textContent = '';
-      renderContainers(postsContainer, 'Посты');
-      value.map((post) => renderPosts(postsContainer, post, state.viewedPosts));
-    }
-    if (path === 'currentPost') {
-      renderModal(value);
-    }
-    if (path === 'error') {
-      inputEl.classList.add('is-invalid');
-      feedbackEl.classList.add('text-danger');
-      feedbackEl.textContent = value;
-    }
-    if (path === 'viewedPosts') {
-      renderReadPosts(value);
+
+    switch (path) {
+      case 'feeds':
+        feedsContainer.textContent = '';
+        renderContainers(feedsContainer, i18n.t('interface.feeds'));
+        renderFeeds(feedsContainer, value);
+        break;
+      case 'posts':
+        inputEl.classList.remove('is-invalid');
+        feedbackEl.classList.remove('text-danger');
+        feedbackEl.classList.add('text-success');
+        feedbackEl.textContent = i18n.t('successLoading');
+        postsContainer.textContent = '';
+        renderContainers(postsContainer, i18n.t('interface.posts'));
+        value.map((post) => renderPosts(postsContainer, post, state.viewedPosts, i18n.t('interface.button')));
+        break;
+      case 'currentPost':
+        renderModal(value);
+        break;
+      case 'error':
+        inputEl.classList.add('is-invalid');
+        feedbackEl.classList.add('text-danger');
+        feedbackEl.textContent = value;
+        break;
+      case 'viewedPosts':
+        renderReadPosts(value);
+        break;
+      default:
+        throw new Error('unknown case');
     }
   });
   return watchedState;

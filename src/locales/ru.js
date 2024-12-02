@@ -1,6 +1,10 @@
 export default {
   translation: {
-    interface: {},
+    interface: {
+      button: 'Просмотр',
+      feeds: 'Фиды',
+      posts: 'Посты',
+    },
     error: {
       validation: {
         invalidURL: 'Ссылка должна быть валидным URL',
