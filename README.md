@@ -5,6 +5,7 @@
 # RSS-reader
 
 Rss-reader is a service for aggregating RSS feeds, with which it is convenient to read a variety of sources, such as blogs. It allows you to add an unlimited number of RSS feeds, updates them yourself and adds new entries to the general stream.
+
 ![Logo](https://cdn-icons-png.freepik.com/256/8972/8972761.png)
 
 ## Demonstration
