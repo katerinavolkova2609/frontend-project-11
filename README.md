@@ -10,7 +10,7 @@ Rss-reader is a service for aggregating RSS feeds, with which it is convenient t
 
 ## Demonstration
 
-[Tap the link for see how it works](https://frontend-project-11-bcpk.vercel.app/)
+[Tap the link to see how it works](https://frontend-project-11-bcpk.vercel.app/)
 
 
 ### Setup
