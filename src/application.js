@@ -100,14 +100,14 @@ export default async () => {
   });
 
   containerWithPosts.addEventListener('click', (e) => {
-    const closestEl = e.target.previousElementSibling;
-    const titleOfPost = closestEl.textContent;
-    const [currentPost] = state.posts
-      .flat()
-      .filter((post) => post.title === titleOfPost);
-    watchedState.currentPost = currentPost;
-    state.viewedPosts.push(currentPost.id);
-    watchedState.viewedPosts = [...state.viewedPosts];
+    if (e.target.dataset.id) {
+      const [currentPost] = state.posts
+        .flat()
+        .filter((post) => post.id === e.target.dataset.id);
+      watchedState.currentPost = currentPost;
+      state.viewedPosts.push(currentPost.id);
+      watchedState.viewedPosts = [...state.viewedPosts];
+    }
   });
 
   updatePosts();
