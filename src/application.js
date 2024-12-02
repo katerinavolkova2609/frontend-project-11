@@ -59,19 +59,25 @@ export default async () => {
 
   const updatePosts = (delay = 5000) => {
     setTimeout(() => {
-      const promises = state.urls.map((url) => getData(url).then((response) => {
-        const newPosts = response.posts;
-        const oldTitles = state.posts.flat().map((post) => post.title);
-        const filteredPosts = newPosts.filter(
-          ({ title }) => !oldTitles.includes(title),
-        );
-        const newPostWithId = getId(filteredPosts);
-        state.posts.unshift(newPostWithId);
-        watchedState.posts = [...state.posts];
-      })
-        .catch((err) => errorHandler(err)));
-      Promise.all(promises).finally(() => updatePosts());
-    }, delay);
+      const promises = state.urls.map((url) => {
+        if (state.error === '') {
+          getData(url).then((response) => {
+            const newPosts = response.posts;
+            const oldTitles = state.posts.flat().map((post) => post.title);
+            const filteredPosts = newPosts.filter(
+              ({ title }) => !oldTitles.includes(title),
+            );
+            const newPostWithId = getId(filteredPosts);
+            state.posts.unshift(newPostWithId);
+            watchedState.posts = [...state.posts];
+          })
+            .catch((err) => errorHandler(err));
+        } else {
+          watchedState.error = state.error;
+        }
+        return Promise.all(promises).finally(() => updatePosts());
+      }, delay);
+    });
   };
 
   form.addEventListener('submit', (e) => {
@@ -96,6 +102,7 @@ export default async () => {
       .catch((error) => {
         const [err] = error.errors;
         watchedState.error = err;
+        state.error = err;
       });
   });
 

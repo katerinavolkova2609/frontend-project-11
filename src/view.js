@@ -79,6 +79,11 @@ export default (state, i18n) => {
     const feedbackEl = document.querySelector('.feedback');
 
     switch (path) {
+      case 'error':
+        inputEl.classList.add('is-invalid');
+        feedbackEl.classList.add('text-danger');
+        feedbackEl.textContent = value;
+        break;
       case 'feeds':
         feedsContainer.textContent = '';
         renderContainers(feedsContainer, i18n.t('interface.feeds'));
@@ -95,11 +100,6 @@ export default (state, i18n) => {
         break;
       case 'currentPost':
         renderModal(value);
-        break;
-      case 'error':
-        inputEl.classList.add('is-invalid');
-        feedbackEl.classList.add('text-danger');
-        feedbackEl.textContent = value;
         break;
       case 'viewedPosts':
         renderReadPosts(value);
