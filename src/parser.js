@@ -20,7 +20,7 @@ export default (stringContainingRSS) => {
     return { title, description };
   });
   return {
-    feeds: { title: mainTitle, description: mainFeedDescription },
+    feed: { title: mainTitle, description: mainFeedDescription },
     posts,
   };
 };

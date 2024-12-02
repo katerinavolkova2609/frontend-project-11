@@ -89,10 +89,10 @@ export default async () => {
       .then(() => {
         getData(inputValue)
           .then((response) => {
-            const { feeds, posts } = response;
+            const { feed, posts } = response;
             state.urls.push(inputValue);
             const postsWithId = getId(posts);
-            state.feeds.unshift(feeds);
+            state.feeds.unshift(feed);
             state.posts.unshift(postsWithId);
             watchedState.feeds = [...state.feeds];
             watchedState.posts = [...state.posts];
