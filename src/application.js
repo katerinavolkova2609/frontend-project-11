@@ -6,7 +6,7 @@ import resources from './locales/index.js';
 import watch from './view.js';
 import parse from './parser.js';
 
-export default async () => {
+export default () => {
   const state = {
     error: '',
     urls: [],
@@ -55,29 +55,27 @@ export default async () => {
     }
   };
 
-  const getId = (posts) => posts.map((post) => ({ ...post, id: uniqueId() }));
+  const setId = (posts) => posts.map((post) => ({ ...post, id: uniqueId() }));
 
   const updatePosts = (delay = 5000) => {
     setTimeout(() => {
       const promises = state.urls.map((url) => {
-        if (state.error === '') {
-          getData(url).then((response) => {
-            const newPosts = response.posts;
-            const oldTitles = state.posts.flat().map((post) => post.title);
-            const filteredPosts = newPosts.filter(
-              ({ title }) => !oldTitles.includes(title),
-            );
-            const newPostWithId = getId(filteredPosts);
-            state.posts.unshift(newPostWithId);
-            watchedState.posts = [...state.posts];
-          })
-            .catch((err) => errorHandler(err));
-        } else {
+        getData(url).then((response) => {
+          const newPosts = response.posts;
+          const oldTitles = state.posts.flat().map((post) => post.title);
+          const filteredPosts = newPosts.filter(
+            ({ title }) => !oldTitles.includes(title),
+          );
+          const newPostWithId = setId(filteredPosts);
+          state.posts.unshift(newPostWithId);
+          watchedState.posts = [...state.posts];
           watchedState.error = state.error;
-        }
-        return Promise.all(promises).finally(() => updatePosts());
-      }, delay);
-    });
+        })
+          .catch((err) => errorHandler(err));
+        return;
+      });
+      Promise.all(promises).finally(() => updatePosts());
+    }, delay);
   };
 
   form.addEventListener('submit', (e) => {
@@ -91,7 +89,7 @@ export default async () => {
           .then((response) => {
             const { feed, posts } = response;
             state.urls.push(inputValue);
-            const postsWithId = getId(posts);
+            const postsWithId = setId(posts);
             state.feeds.unshift(feed);
             state.posts.unshift(postsWithId);
             watchedState.feeds = [...state.feeds];

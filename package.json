@@ -25,7 +25,6 @@
   "homepage": "https://github.com/katerinavolkova2609/frontend-project-11#readme",
   "devDependencies": {
     "@playwright/test": "^1.49.0",
-    "@types/node": "^22.10.1",
     "@webpack-cli/generators": "^3.0.7",
     "autoprefixer": "^10.4.20",
     "css-loader": "^7.1.2",

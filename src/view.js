@@ -91,12 +91,14 @@ export default (state, i18n) => {
         renderFeeds(feedsContainer, value);
         break;
       case 'posts':
-        form.reset();
-        inputEl.focus();
-        inputEl.classList.remove('is-invalid');
-        feedbackEl.classList.remove('text-danger');
-        feedbackEl.classList.add('text-success');
-        feedbackEl.textContent = i18n.t('successLoading');
+        if (state.error === '') {
+          form.reset();
+          inputEl.focus();
+          inputEl.classList.remove('is-invalid');
+          feedbackEl.classList.remove('text-danger');
+          feedbackEl.classList.add('text-success');
+          feedbackEl.textContent = i18n.t('successLoading');
+        }
         postsContainer.textContent = '';
         renderContainers(postsContainer, i18n.t('interface.posts'));
         value.map((post) => renderPosts(postsContainer, post, state.viewedPosts, i18n.t('interface.button')));
