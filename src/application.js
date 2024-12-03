@@ -6,7 +6,7 @@ import resources from './locales/index.js';
 import watch from './view.js';
 import parse from './parser.js';
 
-export default () => {
+export default async () => {
   const state = {
     error: '',
     urls: [],
@@ -17,7 +17,7 @@ export default () => {
   };
   const i18n = i18next.createInstance();
 
-  i18n.init({
+  await i18n.init({
     lng: 'ru',
     debug: true,
     resources,
@@ -59,21 +59,18 @@ export default () => {
 
   const updatePosts = (delay = 5000) => {
     setTimeout(() => {
-      const promises = state.urls.map((url) => {
-        getData(url).then((response) => {
-          const newPosts = response.posts;
-          const oldTitles = state.posts.flat().map((post) => post.title);
-          const filteredPosts = newPosts.filter(
-            ({ title }) => !oldTitles.includes(title),
-          );
-          const newPostWithId = setId(filteredPosts);
-          state.posts.unshift(newPostWithId);
-          watchedState.posts = [...state.posts];
-          watchedState.error = state.error;
-        })
-          .catch((err) => errorHandler(err));
-        return;
-      });
+      const promises = state.urls.map((url) => getData(url).then((response) => {
+        const newPosts = response.posts;
+        const oldTitles = state.posts.flat().map((post) => post.title);
+        const filteredPosts = newPosts.filter(
+          ({ title }) => !oldTitles.includes(title),
+        );
+        const newPostWithId = setId(filteredPosts);
+        state.posts.unshift(newPostWithId);
+        watchedState.posts = [...state.posts];
+        watchedState.error = state.error;
+      })
+        .catch((err) => err));
       Promise.all(promises).finally(() => updatePosts());
     }, delay);
   };
